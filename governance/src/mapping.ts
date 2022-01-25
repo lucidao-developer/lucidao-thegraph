@@ -96,14 +96,17 @@ function setManualProposalStatus(proposalId: BigInt, proposalEntity: ProposalEnt
 }
 
 function slugify(myText: string): string {
-  const fromChar: string[] = "àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìıİłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;#".split("");
-  const toChar: string[] = "aaaaaaaaaacccddeeeeeeeegghiiiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz----   ".split("");
+  const fromChar: string[] = "àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìıİłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;#[]".split("");
+  const toChar: string[] = "aaaaaaaaaacccddeeeeeeeegghiiiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz----     ".split("");
 
   let slug = myText.toLowerCase();
   for (var _i = 0; _i < fromChar.length; _i++) {
     slug = slug.replaceAll(fromChar[_i], toChar[_i]);
   }
-  return slug.split(" ").map<string>(y => y.trim()).filter(x => x.length > 0).join("_");
+  slug = slug.split(" ").map<string>(y => y.trim()).filter(x => x.length > 0).join("_");
+  slug = slug.replaceAll("-_", "-");
+  slug = slug.replaceAll("_-", "-");
+  return slug;
 }
 
 function createWebId(blockNumber: BigInt, proposalDescription: string): string {
@@ -115,7 +118,7 @@ function createWebId(blockNumber: BigInt, proposalDescription: string): string {
     const slug = slugify(proposalDescription);
     return `${blockNumber.toString()}-${slug}`;
   }
-  const proposalDiscourseID = proposalDescriptionChunks[0];
+  const proposalDiscourseID = slugify(proposalDescriptionChunks[0]);
   const slug = slugify(proposalDescriptionChunks[proposalDescriptionChunks.length - 1]);
   return `${proposalDiscourseID}-${slug}`;
 }
