@@ -11,31 +11,35 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class ExampleEntity extends Entity {
+export class ProposalEntity extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("count", Value.fromBigInt(BigInt.zero()));
-    this.set("previousAdmin", Value.fromBytes(Bytes.empty()));
-    this.set("newAdmin", Value.fromBytes(Bytes.empty()));
+    this.set("webId", Value.fromString(""));
+    this.set("description", Value.fromString(""));
+    this.set("startBlock", Value.fromBigInt(BigInt.zero()));
+    this.set("endBlock", Value.fromBigInt(BigInt.zero()));
+    this.set("transaction", Value.fromString(""));
+    this.set("proposer", Value.fromBytes(Bytes.empty()));
+    this.set("targets", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ExampleEntity entity without an ID");
+    assert(id != null, "Cannot save ProposalEntity entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save ExampleEntity entity with non-string ID. " +
+        "Cannot save ProposalEntity entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("ExampleEntity", id.toString(), this);
+      store.set("ProposalEntity", id.toString(), this);
     }
   }
 
-  static load(id: string): ExampleEntity | null {
-    return changetype<ExampleEntity | null>(store.get("ExampleEntity", id));
+  static load(id: string): ProposalEntity | null {
+    return changetype<ProposalEntity | null>(store.get("ProposalEntity", id));
   }
 
   get id(): string {
@@ -47,30 +51,337 @@ export class ExampleEntity extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get count(): BigInt {
-    let value = this.get("count");
+  get webId(): string {
+    let value = this.get("webId");
+    return value!.toString();
+  }
+
+  set webId(value: string) {
+    this.set("webId", Value.fromString(value));
+  }
+
+  get description(): string {
+    let value = this.get("description");
+    return value!.toString();
+  }
+
+  set description(value: string) {
+    this.set("description", Value.fromString(value));
+  }
+
+  get startBlock(): BigInt {
+    let value = this.get("startBlock");
     return value!.toBigInt();
   }
 
-  set count(value: BigInt) {
-    this.set("count", Value.fromBigInt(value));
+  set startBlock(value: BigInt) {
+    this.set("startBlock", Value.fromBigInt(value));
   }
 
-  get previousAdmin(): Bytes {
-    let value = this.get("previousAdmin");
+  get endBlock(): BigInt {
+    let value = this.get("endBlock");
+    return value!.toBigInt();
+  }
+
+  set endBlock(value: BigInt) {
+    this.set("endBlock", Value.fromBigInt(value));
+  }
+
+  get transaction(): string {
+    let value = this.get("transaction");
+    return value!.toString();
+  }
+
+  set transaction(value: string) {
+    this.set("transaction", Value.fromString(value));
+  }
+
+  get proposer(): Bytes {
+    let value = this.get("proposer");
     return value!.toBytes();
   }
 
-  set previousAdmin(value: Bytes) {
-    this.set("previousAdmin", Value.fromBytes(value));
+  set proposer(value: Bytes) {
+    this.set("proposer", Value.fromBytes(value));
   }
 
-  get newAdmin(): Bytes {
-    let value = this.get("newAdmin");
+  get votes(): Array<string> | null {
+    let value = this.get("votes");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set votes(value: Array<string> | null) {
+    if (!value) {
+      this.unset("votes");
+    } else {
+      this.set("votes", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get statuses(): Array<string> | null {
+    let value = this.get("statuses");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set statuses(value: Array<string> | null) {
+    if (!value) {
+      this.unset("statuses");
+    } else {
+      this.set("statuses", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get signatures(): Array<string> | null {
+    let value = this.get("signatures");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set signatures(value: Array<string> | null) {
+    if (!value) {
+      this.unset("signatures");
+    } else {
+      this.set("signatures", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get targets(): Array<string> {
+    let value = this.get("targets");
+    return value!.toStringArray();
+  }
+
+  set targets(value: Array<string>) {
+    this.set("targets", Value.fromStringArray(value));
+  }
+
+  get values(): Array<BigInt> | null {
+    let value = this.get("values");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigIntArray();
+    }
+  }
+
+  set values(value: Array<BigInt> | null) {
+    if (!value) {
+      this.unset("values");
+    } else {
+      this.set("values", Value.fromBigIntArray(<Array<BigInt>>value));
+    }
+  }
+
+  get callDatas(): Array<Bytes> | null {
+    let value = this.get("callDatas");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytesArray();
+    }
+  }
+
+  set callDatas(value: Array<Bytes> | null) {
+    if (!value) {
+      this.unset("callDatas");
+    } else {
+      this.set("callDatas", Value.fromBytesArray(<Array<Bytes>>value));
+    }
+  }
+}
+
+export class ProposalUserVote extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("voter", Value.fromBytes(Bytes.empty()));
+    this.set("weight", Value.fromBigInt(BigInt.zero()));
+    this.set("proposal", Value.fromString(""));
+    this.set("block", Value.fromBigInt(BigInt.zero()));
+    this.set("blockTimestamp", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ProposalUserVote entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save ProposalUserVote entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("ProposalUserVote", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ProposalUserVote | null {
+    return changetype<ProposalUserVote | null>(
+      store.get("ProposalUserVote", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get voter(): Bytes {
+    let value = this.get("voter");
     return value!.toBytes();
   }
 
-  set newAdmin(value: Bytes) {
-    this.set("newAdmin", Value.fromBytes(value));
+  set voter(value: Bytes) {
+    this.set("voter", Value.fromBytes(value));
+  }
+
+  get weight(): BigInt {
+    let value = this.get("weight");
+    return value!.toBigInt();
+  }
+
+  set weight(value: BigInt) {
+    this.set("weight", Value.fromBigInt(value));
+  }
+
+  get support(): i32 {
+    let value = this.get("support");
+    return value!.toI32();
+  }
+
+  set support(value: i32) {
+    this.set("support", Value.fromI32(value));
+  }
+
+  get reason(): string | null {
+    let value = this.get("reason");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set reason(value: string | null) {
+    if (!value) {
+      this.unset("reason");
+    } else {
+      this.set("reason", Value.fromString(<string>value));
+    }
+  }
+
+  get proposal(): string {
+    let value = this.get("proposal");
+    return value!.toString();
+  }
+
+  set proposal(value: string) {
+    this.set("proposal", Value.fromString(value));
+  }
+
+  get block(): BigInt {
+    let value = this.get("block");
+    return value!.toBigInt();
+  }
+
+  set block(value: BigInt) {
+    this.set("block", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    return value!.toBigInt();
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+}
+
+export class ProposalStatus extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("status", Value.fromString(""));
+    this.set("statusBlockNumber", Value.fromBigInt(BigInt.zero()));
+    this.set("statusBlockTimestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("proposal", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ProposalStatus entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save ProposalStatus entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("ProposalStatus", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ProposalStatus | null {
+    return changetype<ProposalStatus | null>(store.get("ProposalStatus", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get status(): string {
+    let value = this.get("status");
+    return value!.toString();
+  }
+
+  set status(value: string) {
+    this.set("status", Value.fromString(value));
+  }
+
+  get statusBlockNumber(): BigInt {
+    let value = this.get("statusBlockNumber");
+    return value!.toBigInt();
+  }
+
+  set statusBlockNumber(value: BigInt) {
+    this.set("statusBlockNumber", Value.fromBigInt(value));
+  }
+
+  get statusBlockTimestamp(): BigInt {
+    let value = this.get("statusBlockTimestamp");
+    return value!.toBigInt();
+  }
+
+  set statusBlockTimestamp(value: BigInt) {
+    this.set("statusBlockTimestamp", Value.fromBigInt(value));
+  }
+
+  get proposal(): string {
+    let value = this.get("proposal");
+    return value!.toString();
+  }
+
+  set proposal(value: string) {
+    this.set("proposal", Value.fromString(value));
   }
 }
