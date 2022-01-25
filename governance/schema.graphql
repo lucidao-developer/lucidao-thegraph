@@ -1,6 +1,60 @@
-type ExampleEntity @entity {
-  id: ID!
-  count: BigInt!
-  previousAdmin: Bytes! # address
-  newAdmin: Bytes! # address
+enum ProposalState {
+    Pending,
+    Active,
+    Canceled,
+    Defeated,
+    Succeeded,
+    Queued,
+    Expired,
+    Executed
 }
+
+# enum VoteType {
+#   Against,
+#   For,
+#   Abstain
+# }
+
+type ProposalEntity @entity {
+  "proposal id"
+  id: ID!
+  webId: ID!
+  #discourseId: ID!
+  description: String!
+  startBlock: BigInt!
+  endBlock: BigInt!
+  transaction: String!
+  proposer: Bytes!
+  votes: [ProposalUserVote!] @derivedFrom(field: "proposal")
+  statuses: [ProposalStatus!] @derivedFrom(field: "proposal")
+  signatures: [String!]
+  targets: [String!]!
+  values: [BigInt!]
+  callDatas: [Bytes!]
+  # parametersName: [String!]!
+  # parametersValue: [String!]!
+}
+
+#https://thegraph.com/docs/en/developer/create-subgraph-hosted/#many-to-many-relationships
+type ProposalUserVote @entity {
+  id: ID!
+  voter: Bytes!
+  weight: BigInt!
+  support: Int!
+  reason: String
+  proposal: ProposalEntity!
+  block: BigInt!
+  blockTimestamp: BigInt!
+}
+
+type ProposalStatus @entity {
+  id: ID!
+  status: ProposalState!
+  statusBlockNumber: BigInt!
+  statusBlockTimestamp: BigInt!
+  proposal: ProposalEntity!
+}
+
+# type TokenHolder @entity {
+#   name: String!
+# }
