@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0xac1fdCA2Be645E3e06c7832613a78C72135DA945"
       abi: LucidaoGovernor
-      startBlock: 29047549
+      startBlock: 29082774
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
