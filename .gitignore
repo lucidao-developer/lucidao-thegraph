@@ -108,3 +108,4 @@ fetchAbi.py
 
 governance/build
 lucidao-thegraph.code-workspace
+setAccessToken.sh
