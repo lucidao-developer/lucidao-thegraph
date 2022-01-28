@@ -40,3 +40,33 @@ dataSources:
         - event: VoteCast(indexed address,uint256,uint8,uint256,string)
           handler: handleVoteCast
       file: ./src/mapping.ts
+  - kind: ethereum
+    name: Lucidao
+    network: fantom
+    source:
+      address: "0xc2A45FE7d40bCAc8369371B08419DDAFd3131b4a"
+      abi: Lucidao
+      startBlock: 29187992
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - DelegateChanged
+        - DelegateVotesChanged
+        - Transfer
+      abis:
+        - name: Lucidao
+          file: ./abis/Lucidao.json
+      eventHandlers:
+        # - event: Approval(indexed address,indexed address,uint256)
+        #   handler: handleApproval
+        # - event: DelegateChanged(indexed address,indexed address,indexed address)
+        #   handler: handleDelegateChanged
+        - event: DelegateVotesChanged(indexed address,uint256,uint256)
+          handler: handleDelegateVotesChanged
+        # - event: Transfer(indexed address,indexed address,uint256)
+        #   handler: handleTransfer
+      file: ./src/lucidaoMapping.ts
+

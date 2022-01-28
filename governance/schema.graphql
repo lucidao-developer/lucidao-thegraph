@@ -55,6 +55,9 @@ type ProposalStatus @entity {
   proposal: ProposalEntity!
 }
 
-# type TokenHolder @entity {
-#   name: String!
-# }
+type HolderVotingPower @entity {
+  id: ID!
+  holder: Bytes!
+  blockNumber: BigInt!
+  balance: BigInt!
+}

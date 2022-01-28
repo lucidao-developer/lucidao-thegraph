@@ -1,4 +1,4 @@
-import { ProposalUserVote, ProposalStatus } from './../generated/schema';
+import { ProposalUserVote, ProposalStatus } from '../generated/schema';
 import { Address, BigDecimal, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts"
 import {
   LucidaoGovernor,
@@ -96,8 +96,8 @@ function setManualProposalStatus(proposalId: BigInt, proposalEntity: ProposalEnt
 }
 
 function slugify(myText: string): string {
-  const fromChar: string[] = "àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìıİłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;#[]".split("");
-  const toChar: string[] = "aaaaaaaaaacccddeeeeeeeegghiiiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz----     ".split("");
+  const fromChar: string[] = "àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìıİłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;#[]+".split("");
+  const toChar: string[] = "aaaaaaaaaacccddeeeeeeeegghiiiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz----      ".split("");
 
   let slug = myText.toLowerCase();
   for (var _i = 0; _i < fromChar.length; _i++) {
