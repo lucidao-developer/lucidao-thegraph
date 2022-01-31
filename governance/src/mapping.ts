@@ -76,7 +76,7 @@ function setProposalStatus(proposalId: BigInt, proposalEntity: ProposalEntity, s
 
 function setManualProposalStatus(proposalId: BigInt, proposalEntity: ProposalEntity, status: string, eventBlock: ethereum.Block, eventAddress: Address, blockDelay: BigInt): void {
   let estimatedBlockNumber: BigInt = eventBlock.number.plus(blockDelay);
-  let mintingBlockEstimationInSeconds = BigDecimal.fromString("0.86")
+  let mintingBlockEstimationInSeconds = BigDecimal.fromString("0.88")
   let timestampDelta: BigInt = BigInt.fromString(blockDelay.toBigDecimal().times(mintingBlockEstimationInSeconds).truncate(0).toString());
   let estimatedTimestamp: BigInt = eventBlock.timestamp.plus(timestampDelta);
   let statusId = proposalEntity.id + "-" + estimatedBlockNumber.toString();
