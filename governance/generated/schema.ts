@@ -205,7 +205,7 @@ export class ProposalUserVote extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("voter", Value.fromBytes(Bytes.empty()));
+    this.set("voter", Value.fromString(""));
     this.set("weight", Value.fromBigInt(BigInt.zero()));
     this.set("proposal", Value.fromString(""));
     this.set("block", Value.fromBigInt(BigInt.zero()));
@@ -240,13 +240,13 @@ export class ProposalUserVote extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get voter(): Bytes {
+  get voter(): string {
     let value = this.get("voter");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set voter(value: Bytes) {
-    this.set("voter", Value.fromBytes(value));
+  set voter(value: string) {
+    this.set("voter", Value.fromString(value));
   }
 
   get weight(): BigInt {
@@ -386,33 +386,31 @@ export class ProposalStatus extends Entity {
   }
 }
 
-export class HolderVotingPower extends Entity {
+export class Holder extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
     this.set("holder", Value.fromBytes(Bytes.empty()));
     this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
-    this.set("balance", Value.fromBigInt(BigInt.zero()));
+    this.set("votingPower", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save HolderVotingPower entity without an ID");
+    assert(id != null, "Cannot save Holder entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save HolderVotingPower entity with non-string ID. " +
+        "Cannot save Holder entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("HolderVotingPower", id.toString(), this);
+      store.set("Holder", id.toString(), this);
     }
   }
 
-  static load(id: string): HolderVotingPower | null {
-    return changetype<HolderVotingPower | null>(
-      store.get("HolderVotingPower", id)
-    );
+  static load(id: string): Holder | null {
+    return changetype<Holder | null>(store.get("Holder", id));
   }
 
   get id(): string {
@@ -442,12 +440,29 @@ export class HolderVotingPower extends Entity {
     this.set("blockNumber", Value.fromBigInt(value));
   }
 
-  get balance(): BigInt {
-    let value = this.get("balance");
+  get votingPower(): BigInt {
+    let value = this.get("votingPower");
     return value!.toBigInt();
   }
 
-  set balance(value: BigInt) {
-    this.set("balance", Value.fromBigInt(value));
+  set votingPower(value: BigInt) {
+    this.set("votingPower", Value.fromBigInt(value));
+  }
+
+  get votes(): Array<string> | null {
+    let value = this.get("votes");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set votes(value: Array<string> | null) {
+    if (!value) {
+      this.unset("votes");
+    } else {
+      this.set("votes", Value.fromStringArray(<Array<string>>value));
+    }
   }
 }

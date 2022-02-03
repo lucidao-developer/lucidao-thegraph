@@ -11,6 +11,7 @@ import {
   VoteCast
 } from "../generated/LucidaoGovernor/LucidaoGovernor"
 import { ProposalEntity } from "../generated/schema"
+import { getOrCreateHolderEntity } from "./lucidaoMapping";
 
 namespace ProposalState {
   const Pending = "Pending";
@@ -30,24 +31,26 @@ function getOrCreateProposalEntity(proposalId: BigInt): ProposalEntity {
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
   if (!proposalEntity) {
-    proposalEntity = new ProposalEntity(proposalId.toHex())
+    proposalEntity = new ProposalEntity(proposalId.toHex());
+    proposalEntity.save();
   }
   return proposalEntity;
 }
 
 function getOrCreateVote(event: VoteCast): ProposalUserVote {
   let voteId = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
-  let voteEntity = ProposalUserVote.load(voteId)
+  let voteEntity = ProposalUserVote.load(voteId);
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
   if (!voteEntity) {
     voteEntity = new ProposalUserVote(voteId)
   }
+  const holderEntity = getOrCreateHolderEntity(event.params.voter);
 
   voteEntity.weight = event.params.weight;
   voteEntity.support = event.params.support;
-  voteEntity.voter = event.params.voter;
+  voteEntity.voter = holderEntity.id;
   voteEntity.reason = event.params.reason;
   voteEntity.block = event.block.number;
   voteEntity.blockTimestamp = event.block.timestamp;
@@ -152,7 +155,6 @@ function manageArrayParameters(proposalEntity: ProposalEntity, targets: ethereum
 
 export function handleProposalCanceled(event: ProposalCanceled): void {
   let proposalEntity = getOrCreateProposalEntity(event.params.proposalId);
-  proposalEntity.save();
   setProposalStatus(event.params.proposalId, proposalEntity, ProposalState.Canceled, event.block, event.address);
 
   // Note: If a handler doesn't require existing field values, it is faster
@@ -221,13 +223,11 @@ export function handleProposalCreated(event: ProposalCreated): void {
 
 export function handleProposalExecuted(event: ProposalExecuted): void {
   let proposalEntity = getOrCreateProposalEntity(event.params.proposalId);
-  proposalEntity.save()
   setProposalStatus(event.params.proposalId, proposalEntity, ProposalState.Executed, event.block, event.address);
 }
 
 export function handleProposalQueued(event: ProposalQueued): void {
   let proposalEntity = getOrCreateProposalEntity(event.params.proposalId);
-  proposalEntity.save()
   setProposalStatus(event.params.proposalId, proposalEntity, ProposalState.Queued, event.block, event.address);
 }
 

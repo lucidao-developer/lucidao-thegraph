@@ -38,7 +38,7 @@ type ProposalEntity @entity {
 #https://thegraph.com/docs/en/developer/create-subgraph-hosted/#many-to-many-relationships
 type ProposalUserVote @entity {
   id: ID!
-  voter: Bytes!
+  voter: Holder!
   weight: BigInt!
   support: Int!
   reason: String
@@ -55,9 +55,10 @@ type ProposalStatus @entity {
   proposal: ProposalEntity!
 }
 
-type HolderVotingPower @entity {
+type Holder @entity {
   id: ID!
   holder: Bytes!
   blockNumber: BigInt!
-  balance: BigInt!
+  votingPower: BigInt!
+  votes: [ProposalUserVote!] @derivedFrom(field: "voter")
 }

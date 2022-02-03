@@ -1,19 +1,19 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts"
 import {
-  Lucidao,
   Approval,
   DelegateChanged,
   DelegateVotesChanged,
   Transfer
 } from "../generated/Lucidao/Lucidao"
-import { HolderVotingPower } from "../generated/schema"
+import { Holder } from "../generated/schema"
 
 
-function getOrCreateHolderEntity(holderId: Address): HolderVotingPower {
-  let holderEntity = HolderVotingPower.load(holderId.toHex())
+export function getOrCreateHolderEntity(holderId: Address): Holder {
+  let holderEntity = Holder.load(holderId.toHex())
 
   if (!holderEntity) {
-    holderEntity = new HolderVotingPower(holderId.toHex())
+    holderEntity = new Holder(holderId.toHex())
+    holderEntity.save();
   }
   return holderEntity;
 }
@@ -36,7 +36,7 @@ export function handleDelegateChanged(event: DelegateChanged): void {
 export function handleDelegateVotesChanged(event: DelegateVotesChanged): void {
   const holderEntity = getOrCreateHolderEntity(event.params.delegate);
   holderEntity.holder = event.params.delegate;
-  holderEntity.balance = event.params.newBalance;
+  holderEntity.votingPower = event.params.newBalance;
   holderEntity.blockNumber = event.block.number;
   holderEntity.save();
 }
