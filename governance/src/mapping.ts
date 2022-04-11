@@ -12,6 +12,7 @@ import {
 } from "../generated/LucidaoGovernor/LucidaoGovernor"
 import { ProposalEntity } from "../generated/schema"
 import { getOrCreateHolderEntity } from "./lucidaoMapping";
+import { AVG_BLOCK_TIME } from './config';
 
 namespace ProposalState {
   const Pending = "Pending";
@@ -79,7 +80,7 @@ function setProposalStatus(proposalId: BigInt, proposalEntity: ProposalEntity, s
 
 function setManualProposalStatus(proposalId: BigInt, proposalEntity: ProposalEntity, status: string, eventBlock: ethereum.Block, eventAddress: Address, blockDelay: BigInt): void {
   let estimatedBlockNumber: BigInt = eventBlock.number.plus(blockDelay);
-  let mintingBlockEstimationInSeconds = BigDecimal.fromString("0.88")
+  let mintingBlockEstimationInSeconds = BigDecimal.fromString(AVG_BLOCK_TIME)
   let timestampDelta: BigInt = BigInt.fromString(blockDelay.toBigDecimal().times(mintingBlockEstimationInSeconds).truncate(0).toString());
   let estimatedTimestamp: BigInt = eventBlock.timestamp.plus(timestampDelta);
   let statusId = proposalEntity.id + "-" + estimatedBlockNumber.toString();
