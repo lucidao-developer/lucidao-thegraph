@@ -46,7 +46,7 @@ dataSources:
     source:
       address: "0xc2A45FE7d40bCAc8369371B08419DDAFd3131b4a"
       abi: Lucidao
-      startBlock: 28154009
+      startBlock: 28144000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
