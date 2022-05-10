@@ -1,1 +1,1 @@
-export const AVG_BLOCK_TIME = "1";
+export const AVG_BLOCK_TIME = "2.19";
