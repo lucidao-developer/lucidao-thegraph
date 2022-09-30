@@ -6,7 +6,7 @@ import json
 # Exports contract ABI in JSON
 
 #ABI_ENDPOINT = 'https://api.etherscan.io/api?module=contract&action=getabi&address='
-ABI_ENDPOINT = 'https://api.ftmscan.com/api?module=contract&action=getabi&apikey=<insertApiKey>&address='
+ABI_ENDPOINT = 'https://api.polygonscan.com/api?module=contract&action=getabi&apikey=<insertApiKey>&address='
 
 parser = argparse.ArgumentParser()
 parser.add_argument('addr', type=str, help='Contract address')
